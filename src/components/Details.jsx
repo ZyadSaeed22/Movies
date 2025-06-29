@@ -8,18 +8,19 @@ function Details() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    instance.get(`/movie/${id}?api_key=${API_KEY}`).then((res) => {
+    instance
+    .get(`/movie/${id}?api_key=${API_KEY}`).then((res) => {
       setMovie(res.data);
     });
   }, [id]);
 
   if (!movie) return <h3>Wait</h3>;
 
-  const goToNext = () => {
+  const Next = () => {
     navigate(`/details/${Number(id) + 1}`);
   };
 
-  const goToPrevious = () => {
+  const Previous = () => {
     if (Number(id) > 1) {
       navigate(`/details/${Number(id) - 1}`);
     }
@@ -32,10 +33,10 @@ function Details() {
       <h2>{movie.title}</h2>
       <p>{movie.overview}</p>
 
-      {/* Pagination Buttons */}
+      
       <div style={{ marginTop: "20px", display: "flex", justifyContent: "center", gap: "20px" }}>
         <button
-          onClick={goToPrevious}
+          onClick={Previous}
           disabled={Number(id) <= 1}
           style={{
             padding: "10px 20px",
@@ -49,7 +50,7 @@ function Details() {
         </button>
 
         <button
-          onClick={goToNext}
+          onClick={Next}
           style={{
             padding: "10px 20px",
             background: "#007bff",

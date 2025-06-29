@@ -1,157 +1,100 @@
 import React, { useState } from "react";
 
-
 function Login() {
-  const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [errors, setErrors] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const validators = {
-    name: (value) =>
-      value.trim() === "" ? "Name is required" : "",
-
-    username: (value) => {
-      if (value.trim() === "") return "Username is required";
-      if (value.includes(" ")) return "Username must not contain spaces";
-      return "";
-    },
-
-    email: (value) => {
-      if (value.trim() === "") return "Email is required";
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) return "Invalid email format";
-      return "";
-    },
-
-    password: (value) => {
-      if (value.length < 8) return "Password must be at least 8 characters";
-      if (!/[a-z]/.test(value)) return "Password must contain at least one lowercase letter";
-      if (!/[A-Z]/.test(value)) return "Password must contain at least one uppercase letter";
-      if (!/[0-9]/.test(value)) return "Password must contain at least one digit";
-      if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) return "Password must contain at least one special character";
-      return "";
-    },
-
-    confirmPassword: (value) => {
-      if (value.trim() === "") return "Please confirm your password";
-      if (value !== formData.password) return "Passwords do not match";
-      return "";
-    },
-  };
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    setErrors({
-      ...errors,
-      [name]: validators[name] ? validators[name](value) : "",
-    });
+    
+    if (name === "email") {
+      setErrors({
+        ...errors,
+        email: value.trim() === "" ? "Email is required" : "",
+      });
+    }
 
     if (name === "password") {
-      setErrors((prev) => ({
-        ...prev,
-        confirmPassword: validators.confirmPassword(formData.confirmPassword),
-      }));
+      setErrors({
+        ...errors,
+        password: value.trim() === "" ? "Password is required" : "",
+      });
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-
-    const newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      newErrors[key] = validators[key]
-        ? validators[key](formData[key])
-        : "";
-    });
-    setErrors(newErrors);
-
-    const hasErrors = Object.values(newErrors).some((msg) => msg);
-    if (!hasErrors) {
-      console.log('Form submitted:', formData);
+    if (!formData.email || !formData.password) {
+      setErrors({
+        email: formData.email ? "" : "Email is required",
+        password: formData.password ? "" : "Password is required",
+      });
+      return;
     }
+
+    console.log("Logging in with:", formData);
+
   };
 
   return (
-    
-    <form className="max-w-sm mx-auto mt-10 p-6 bg-white rounded shadow-md" onSubmit={handleSubmit} noValidate>
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-semibold mb-2">Name</label>
-        <input
-        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
-      </div>
+    <div
+      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      style={{
+        backgroundImage:
+          "url('https://wallpapers.com/images/hd/movie-poster-background-1920-x-1080-9kjwqg5lf2tuh1qi.jpg')",
+      }}
+    >
+      <div className="bg-white bg-opacity-10 backdrop-blur-md shadow-lg rounded-xl p-8 w-full max-w-md text-white">
+        <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-semibold mb-2">Username</label>
-        <input
-        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-        />
-        {errors.username && <p style={{ color: 'red' }}>{errors.username}</p>}
-      </div>
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="mb-5">
+            <label className="block text-sm mb-1">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded bg-white bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-200 text-white"
+              placeholder="you@example.com"
+            />
+            {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
-        <input
-        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-         type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-      </div>
+          <div className="mb-5">
+            <label className="block text-sm mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 rounded bg-white bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-red-500 placeholder-gray-200 text-white"
+              placeholder="••••••••"
+            />
+            {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+          </div>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
-        <input
-        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-      </div>
+          <button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded transition duration-300"
+          >
+            Login
+          </button>
+        </form>
 
-      <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-semibold mb-2">Confirm Password</label>
-        <input
-        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-        />
-        {errors.confirmPassword && <p style={{ color: 'red' }}>{errors.confirmPassword}</p>}
+        <p className="text-center text-sm mt-4 text-gray-300">
+          Don’t have an account?{" "}
+          <a href="/signup" className="text-red-400 hover:underline">
+            Sign up
+          </a>
+        </p>
       </div>
-
-      <button style={{ cursor: 'pointer' }} className="mb-4 p-3 rounded text-[#fff] bg-[#455172]" type="submit">Register</button>
-    </form>
+    </div>
   );
 }
 
 export default Login;
+
+

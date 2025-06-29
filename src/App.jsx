@@ -5,6 +5,10 @@ import Login from "./components/Login";
 import Movie from "./components/Movie";
 import Details from "./components/Details";
 import Main from "./components/Main";
+import { Provider } from "react-redux";
+import { store } from "./components/Store/Store";
+import Favouritefilm from "./components/Favouritefilm";
+
 
 const router = createBrowserRouter([
   {
@@ -15,12 +19,22 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "movie", element: <Movie /> },
       { path: "details/:id", element: <Details /> },
+      { path: "favourites", element: <Favouritefilm /> }, 
     ],
   },
 ]);
 
+
 function App() {
-  return <RouterProvider router={router} />;
+  return(
+
+  <Provider store={store}>
+                <RouterProvider router={router}></RouterProvider>
+  </Provider>
+
+  
+ 
+  )
 }
 
 export default App;

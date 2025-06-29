@@ -9,27 +9,7 @@ const instance = axios.create({
   timeout: 1000, 
 });
 
-// Interceptor للطلبات (اختياري لعرض اللوج أو إضافة headers)
-instance.interceptors.request.use(
-  (config) => {
-    console.log("Request Sent:", config.url);
-    return config;
-  },
-  (error) => {
-    console.error("Request Error:", error);
-    return Promise.reject(error);
-  }
-);
 
-// Interceptor للردود (اختياري للمعالجة العامة)
-instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    console.error("Response Error:", error);
-    return Promise.reject(error);
-  }
-);
+
 
 export default instance;
