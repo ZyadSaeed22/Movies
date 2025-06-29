@@ -8,13 +8,17 @@ function Details() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    instance
-    .get(`/movie/${id}?api_key=${API_KEY}`).then((res) => {
+    instance.get(`/movie/${id}?api_key=${API_KEY}`).then((res) => {
       setMovie(res.data);
     });
   }, [id]);
 
-  if (!movie) return <h3>Wait</h3>;
+  if (!movie)
+    return (
+      <div className="flex justify-center items-center mt-10">
+        <h3 className="text-xl font-semibold text-gray-400">Loading...</h3>
+      </div>
+    );
 
   const Next = () => {
     navigate(`/details/${Number(id) + 1}`);
@@ -27,47 +31,47 @@ function Details() {
   };
 
   return (
-    <div style={{ marginTop: "30px", borderTop: "1px solid #aaa", paddingTop: "20px" }}>
-      <h3>Movie Details</h3>
-      <img src={IMG_URL + movie.poster_path} alt={movie.title} style={{ width: "300px" }} />
-      <h2>{movie.title}</h2>
-      <p>{movie.overview}</p>
-
-      
-      <div style={{ marginTop: "20px", display: "flex", justifyContent: "center", gap: "20px" }}>
-        <button
-          onClick={Previous}
-          disabled={Number(id) <= 1}
-          style={{
-            padding: "10px 20px",
-            background: "#ddd",
-            border: "none",
-            borderRadius: "5px",
-            cursor: Number(id) <= 1 ? "not-allowed" : "pointer"
-          }}
-        >
-          Prev
-        </button>
-
-        <button
-          onClick={Next}
-          style={{
-            padding: "10px 20px",
-            background: "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
-          Next
-        </button>
+    <div className="min-h-screen bg-black text-white py-10 px-4">
+      <div className="max-w-3xl mx-auto bg-zinc-900 rounded-lg shadow-lg p-6">
+        <h3 className="text-3xl font-bold mb-6 text-center">{movie.title}</h3>
+        <div className="flex flex-col items-center gap-6">
+          <img
+            src={IMG_URL + movie.poster_path}
+            alt={movie.title}
+            className="w-72 rounded-md shadow-lg"
+          />
+          <p className="text-gray-300 text-center">{movie.overview}</p>
+        </div>
+        <div className="flex justify-center gap-6 mt-8 flex-wrap">
+          <button
+            onClick={Previous}
+            disabled={Number(id) <= 1}
+            className={`px-5 py-2 rounded-md transition ${
+              Number(id) <= 1
+                ? "bg-gray-700 cursor-not-allowed text-gray-400"
+                : "bg-red-600 hover:bg-red-700"
+            }`}
+          >
+            ← Previous
+          </button>
+          <button
+            onClick={Next}
+            className="px-5 py-2 rounded-md bg-red-600 hover:bg-red-700 transition"
+          >
+            Next →
+          </button>
+          <button
+            onClick={() => navigate("/movie")}
+            className="px-5 py-2 rounded-md bg-gray-700 hover:bg-gray-800 transition"
+          >
+            ← Back to Movies
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
 export default Details;
-
 
 

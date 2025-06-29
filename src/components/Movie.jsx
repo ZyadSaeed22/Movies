@@ -48,91 +48,60 @@ function Movie() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2 style={{ textAlign: "center" }}>Movies</h2>
+    <div className="bg-black min-h-screen text-white py-10">
+      {/* <h2 className="text-4xl font-bold text-center mb-8">🎬 Popular Movies</h2> */}
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          margin: "20px 0",
-        }}
-      >
+      <div className="flex justify-center items-center mb-10 gap-4">
         <input
           type="text"
           placeholder="Search by movie name..."
           value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          style={{
-            padding: "10px",
-            width: "300px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-            marginRight: "10px",
-          }}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="px-4 py-2 w-72 rounded-md border border-gray-700 bg-zinc-900 focus:outline-none focus:border-red-500"
         />
         <button
           onClick={handleSearch}
-          style={{
-            padding: "10px 20px",
-            borderRadius: "5px",
-            background: "#007bff",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="px-5 py-2 rounded-md bg-red-600 hover:bg-red-700 transition"
         >
           Search
         </button>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          justifyContent: "center",
-        }}
-      >
+      <div className="container mx-auto grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-4">
         {movies.length > 0 ? (
           movies.map((movie) => (
             <div
               key={movie.id}
-              style={{
-                width: "200px",
-                border: "1px solid #ccc",
-                padding: "10px",
-                position: "relative",
-              }}
+              className="relative bg-zinc-900 rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300"
             >
               <img
                 src={IMG_URL + movie.poster_path}
-                style={{ width: "100%" }}
                 alt={movie.title}
+                className="w-full h-80 object-cover"
               />
-             
+
               <span
                 onClick={() => toggleFavourite(movie)}
-                style={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  fontSize: "24px",
-                  cursor: "pointer",
-                  color: isFavourite(movie.id) ? "gold" : "gray",
-                }}
+                className={`absolute top-3 right-3 text-2xl cursor-pointer ${
+                  isFavourite(movie.id) ? "text-yellow-400" : "text-gray-500"
+                }`}
               >
                 ★
               </span>
-              <h4>{movie.title}</h4>
-              <button onClick={() => navigate(`/details/${movie.id}`)}>
-                Show Details
-              </button>
+
+              <div className="p-4">
+                <h4 className="text-lg font-semibold mb-3">{movie.title}</h4>
+                <button
+                  onClick={() => navigate(`/details/${movie.id}`)}
+                  className="w-full py-2 bg-red-600 hover:bg-red-700 rounded-md transition"
+                >
+                  Show Details
+                </button>
+              </div>
             </div>
           ))
         ) : (
-          <p>No movies found</p>
+          <p className="text-center text-gray-400 col-span-full">No movies found</p>
         )}
       </div>
     </div>
