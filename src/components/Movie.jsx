@@ -3,34 +3,33 @@ import { useNavigate } from "react-router-dom";
 import instance, { API_KEY, IMG_URL } from "../components/instance/instance";
 import { useDispatch, useSelector } from "react-redux";
 import { addfilm, removefilm } from "./Store/slice/Favourite";
-
-const MOVIE_API = `/movie/popular?api_key=${API_KEY}`;
+import { Movieaction } from "./Store/slice/Asynmovie";
 
 function Movie() {
-  const [movies, setMovies] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
   const favList = useSelector((state) => state.favourite.films);
+  const Movies = useSelector((state) => state.slicemovies.Movies);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    instance.get(MOVIE_API).then((res) => {
-      setMovies(res.data.results);
-    });
-  }, []);
+    dispatch(Movieaction(currentPage));
+  }, [dispatch, currentPage]);
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") {
-      instance.get(MOVIE_API).then((res) => {
-        setMovies(res.data.results);
-      });
+      dispatch(Movieaction(1));
     } else {
       instance
         .get(`/search/movie?api_key=${API_KEY}&query=${searchQuery}`)
         .then((res) => {
-          setMovies(res.data.results);
-        });
+          console.log("Search API Response:", res.data);
+          
+        })
+        .catch((err) => console.error("Search error", err));
     }
   };
 
@@ -49,8 +48,7 @@ function Movie() {
 
   return (
     <div className="bg-black min-h-screen text-white py-10">
-      {/* <h2 className="text-4xl font-bold text-center mb-8">🎬 Popular Movies</h2> */}
-
+      {/* Search */}
       <div className="flex justify-center items-center mb-10 gap-4">
         <input
           type="text"
@@ -67,9 +65,10 @@ function Movie() {
         </button>
       </div>
 
-      <div className="container mx-auto grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-4">
-        {movies.length > 0 ? (
-          movies.map((movie) => (
+      {/* Movies */}
+      <div className="container mx-auto grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-4">
+        {Movies.length > 0 ? (
+          Movies.map((movie) => (
             <div
               key={movie.id}
               className="relative bg-zinc-900 rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform duration-300"
@@ -77,9 +76,8 @@ function Movie() {
               <img
                 src={IMG_URL + movie.poster_path}
                 alt={movie.title}
-                className="w-full h-80 object-cover"
+                className="w-full h-64 object-cover"
               />
-
               <span
                 onClick={() => toggleFavourite(movie)}
                 className={`absolute top-3 right-3 text-2xl cursor-pointer ${
@@ -88,8 +86,7 @@ function Movie() {
               >
                 ★
               </span>
-
-              <div className="p-4">
+              <div className="p-3">
                 <h4 className="text-lg font-semibold mb-3">{movie.title}</h4>
                 <button
                   onClick={() => navigate(`/details/${movie.id}`)}
@@ -101,15 +98,35 @@ function Movie() {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-400 col-span-full">No movies found</p>
+          <p className="text-center text-gray-400 col-span-full">
+            No movies found
+          </p>
         )}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-10 space-x-2">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 rounded-md border border-red-600 text-red-400 hover:bg-red-700 hover:text-white disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="px-4 py-2">
+          Page {currentPage}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          className="px-4 py-2 rounded-md border border-red-600 text-red-400 hover:bg-red-700 hover:text-white"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
 }
 
 export default Movie;
-
-
 
 

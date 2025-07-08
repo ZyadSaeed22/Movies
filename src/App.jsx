@@ -8,7 +8,9 @@ import Main from "./components/Main";
 import { Provider } from "react-redux";
 import { store } from "./components/Store/Store";
 import Favouritefilm from "./components/Favouritefilm";
-
+import { ThemProvider } from "./Context/Theme";
+import { useState } from "react";
+import { AuthProvider } from "./Context/Auth";
 
 const router = createBrowserRouter([
   {
@@ -19,25 +21,45 @@ const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "movie", element: <Movie /> },
       { path: "details/:id", element: <Details /> },
-      { path: "favourites", element: <Favouritefilm /> }, 
+      { path: "favourites", element: <Favouritefilm /> },
     ],
   },
 ]);
 
-
 function App() {
-  return(
-
-  <Provider store={store}>
-                <RouterProvider router={router}></RouterProvider>
-  </Provider>
-
+  const [them, setThem] = useState("light");
   
+  const [auth,setAuth]=useState(null);
+  const login=(user)=>{
+    setAuth(user) 
+
+  } 
+
+  const logout=()=>{
+    setAuth(null)
+  }
+
+
+  return (
  
-  )
+ 
+    <div>
+      <AuthProvider value={{ auth,login,logout}}>
+        <ThemProvider value={{ them, setThem }}>
+      <Provider store={store}>
+        <RouterProvider router ={router} />
+      </Provider>
+    </ThemProvider>
+      </AuthProvider>
+      
+    </div>
+    
+  );
 }
 
 export default App;
+
+
 
 
 
