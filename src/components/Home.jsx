@@ -14,7 +14,7 @@ export default function Home() {
   useEffect(() => {
     instance
       .get(`/movie/popular?api_key=${API_KEY}`)
-      .then((res) => setMovies(res.data.results.slice(0, 4)))
+      .then((res) => setMovies(res.data.results.slice(0, 8)))
       .catch((err) => console.error(err));
   }, []);
 
@@ -29,7 +29,7 @@ export default function Home() {
       </div>
 
       {/* Slider */}
-      <div className="relative w-full mt-8 flex justify-center ">
+      <div className="relative w-full mt-8 flex justify-center">
         <Swiper
           modules={[EffectCoverflow, Autoplay]}
           effect="coverflow"
@@ -45,12 +45,12 @@ export default function Home() {
             modifier: 1,
             slideShadows: true,
           }}
-          className="mySwiper w-full  h-[500px]"
+          className="mySwiper w-2/3 h-[500px]"
         >
           {movies.map((movie) => (
             <SwiperSlide
               key={movie.id}
-              className="relative h-[250px] w-[00px]   rounded-lg overflow-hidden mx-auto"
+              className="relative h-[250px] w-[00px] rounded-lg overflow-hidden mx-auto"
             >
               <img
                 src={IMG_URL + movie.backdrop_path}
@@ -102,7 +102,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-neutral-950 text-gray-300 px-8 py-12 mt-12">
+      <footer className="bg-neutral-950 text-gray-300 px-8 py-12 mt-40 pt-12">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8">
           {/* Explore */}
           <div>
